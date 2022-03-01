@@ -137,12 +137,14 @@ def lambda_handler(event, context):
         news_rg = re.compile(
             r"эй ричард, как там на передовой\?", re.IGNORECASE)
         if news_rg.match(message_text):
-            print("news message")
-            url, text = hn_top.get_top()
-            send_message("все идет по плану. новости вот читаю: [%s](%s)" % (
-                text, url), chat_id, reply_to)
+            if random.randint(1,100)<ratio:
+                print("news message")
+                url, text = hn_top.get_top()
+                send_message("все идет по плану. новости вот читаю: [%s](%s)" % (
+                    text, url), chat_id, reply_to)
+            else:
+                send_message("Двусмысленно!", chat_id, reply_to)
             return {"statusCode": 200}
-
         print("uber")
         uber_answer = check(
             message_text,
@@ -173,28 +175,28 @@ def lambda_handler(event, context):
         )
         if setevik_answer["statusCode"] > 0:
             return setevik_answer
-        
+
         print("amen")
-                
+
         amen_answer = check(
             message_text, r".*\b(бегемотство)\b.*", "аминь", chat_id, reply_to, RAND_RATIO * 3
         )
         if amen_answer["statusCode"] > 0:
             return amen_answer
-        
+
         print("pizda")
         pizda_answer = check(
             message_text, r"да[.!\)]?$", "фрибэсда", chat_id, reply_to, RAND_RATIO * 3
         )
         if pizda_answer["statusCode"] > 0:
             return pizda_answer
-            
+
         pizda_answer1 = check(
             message_text, r"нет[.!\)]?$", "эникейщика ответ", chat_id, reply_to, RAND_RATIO * 3
         )
         if pizda_answer1["statusCode"] > 0:
             return pizda_answer1
-        
+
         print("aliexpress_answer")
         aliexpress_answer = check(
             message_text, r".*\b(али|алиекспресс?[А-я]?|алиэкспресс?[А-я]?|aliexpress|bangood)\b.*", "НЕ ПОКУПАЙ У КИТАЙЦЕВ ПОДУМОЙ", chat_id, reply_to, 101
